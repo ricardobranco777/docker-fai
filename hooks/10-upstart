@@ -1,0 +1,13 @@
+#!bin/bash
+
+. /etc/lsb-release
+
+[[ $DISTRIB_ID = "Ubuntu" && $DISTRIB_CODENAME = "xenial" ]] || return 0
+
+$ROOTCMD apt-get install upstart upstart-sysv
+# If rcS.conf is not removed, FAI will be started twice.
+$ROOTCMD rm -v /etc/init/rcS.conf
+
+$ROOTCMD apt-get remove -y systemd
+
+$ROOTCMD ln -f /bin/true /sbin/initctl

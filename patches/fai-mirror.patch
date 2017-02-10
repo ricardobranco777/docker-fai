@@ -1,0 +1,12 @@
+# This patch lets us use both amd64 and i386 architectures with fai-mirror.  Useful on multiarch distributions like Ubuntu.
+--- /usr/bin/fai-mirror.orig	2015-09-16 23:16:00.623982048 +0000
++++ /usr/bin/fai-mirror	2015-09-16 23:12:02.363974221 +0000
+@@ -90,6 +90,8 @@
+       -o Aptitude::Log=/dev/null \
+       -o Aptitude::CmdLine::Ignore-Trust-Violations=yes\
+       -o APT::Get::AllowUnauthenticated=true \
++      -o APT::Architectures="amd64" \
++      -o APT::Architectures="i386" \
+       -o DPkg::force-conflicts::=yes \
+       -o Dir::State=$aptcache/var/lib/apt \
+       -o Dir::Log=$aptcache/var/log/apt \

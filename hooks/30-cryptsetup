@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Let cryptsetup choose the default algorithm.
+# aes-cbc-essiv:sha256 was the default with cryptsetup < 1.6.0
+# aes-xts-plain64:sha256 is now the default
+$ROOTCMD sed -i -e 's/ -c aes-cbc-essiv:sha256 -s 256//' /usr/share/fai/setup-storage/Commands.pm

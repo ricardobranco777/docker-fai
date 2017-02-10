@@ -1,0 +1,33 @@
+# This patch:
+# 1. Let us use easily outdated repositories like security.debian.org on FAI CD's
+# 2. Supports Ubuntu 16.04
+# 3. Forces the installation of FAI 4.3.3
+--- /usr/sbin/fai-make-nfsroot.orig	2015-05-26 06:12:08.000000000 -0500
++++ /usr/sbin/fai-make-nfsroot	2015-11-24 12:59:41.000000000 -0500
+@@ -384,6 +384,7 @@
+ APT::Get::AllowUnauthenticated true;
+ Aptitude::CmdLine::Ignore-Trust-Violations yes;
+ Acquire::Languages none;
++Acquire::Check-Valid-Until "false";
+ EOF
+ 
+     # currently we do not want to use systemd
+@@ -407,7 +408,7 @@
+ 
+     # set timezone in nfsroot
+     cp -H /etc/timezone  etc/timezone
+-    cp -H /etc/localtime etc/localtime
++    [ ! -f etc/localtime ] && cp -H /etc/localtime etc/localtime
+     ln -sf /proc/mounts etc/mtab
+ 
+     [ -f etc/init/tty1.conf ] || ln -s /usr/sbin/fai etc/init.d/rcS
+@@ -450,7 +451,8 @@
+         done
+     fi
+     $ROOTCMD apt-get update
+-    $ROOTCMD aptitude -Rfy install fai-nfsroot nfs-common
++    $ROOTCMD aptitude -Rfy install fai-nfsroot=4.3.3 fai-setup-storage=4.3.3 fai-client=4.3.3
++    $ROOTCMD apt-mark hold fai-nfsroot fai-setup-storage fai-client
+     $ROOTCMD apt-get -y dist-upgrade
+     fdivert /usr/sbin/update-grub
+ }

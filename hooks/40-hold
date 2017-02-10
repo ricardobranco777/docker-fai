@@ -1,0 +1,3 @@
+#!/bin/bash
+
+$ROOTCMD apt-mark hold fai-client fai-nfsroot fai-setup-storage

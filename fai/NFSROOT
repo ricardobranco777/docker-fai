@@ -1,0 +1,35 @@
+# package list for creating the NFSROOT
+
+PACKAGES aptitude
+
+fai-nfsroot=4.3.3 fai-client=4.3.3 fai-setup-storage=4.3.3 module-init-tools ssh rdate lshw
+rsync lftp less dump e2fsprogs usbutils
+psmisc pciutils hdparm smartmontools parted mdadm lvm2
+dnsutils ntpdate
+procinfo numactl dialog
+console-common kbd
+iproute2 moreutils udev
+xz-utils pigz pixz lbzip2
+cupt
+syslinux-common
+libapt-pkg-perl apt-transport-https
+busybox cryptsetup
+
+# some network cards needs firmware
+#firmware-bnx2 firmware-bnx2x firmware-realtek
+#firmware-linux-nonfree
+
+# dracut can replace live-boot
+#dracut-network live-boot- live-boot-initramfs-tools-
+
+# choose if you like live-boot or dracut inside the nfsroot
+live-boot
+
+# you should not edit the lines below
+# architecture dependend list of packages that are installed
+
+#git # git consumes a lot of disk space on the FAI CD (ISO 9660)
+
+grub-pc
+linux-image-generic
+
