@@ -46,3 +46,8 @@ Code for Docker image of FAI [Fully Automatic Installation](http://fai-project.o
 * To reliably burn the ISO to an USB thumb drive, use the **burniso.sh** script provided in the utils/ directory:
 
 `burniso.sh /tmp/fai-full.iso`
+
+
+NOTES:
+
+* This image is based on Ubuntu 16.04 to create Ubuntu 16.04 images.  I have used this image to create Debian 7 & 8 images, as well as Ubuntu 14.04.
