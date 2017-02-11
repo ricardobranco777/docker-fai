@@ -1,5 +1,5 @@
 # fai
-Code for Docker image of FAI [Fully Automatic Installation](http://fai-project.org/) 4.3.3
+Code for Docker image of FAI [Fully Automatic Installation](http://fai-project.org/) 4.3.3.  With this image you may create FAI ISO's for Trusted Builds.
 
 * To use this image:
 
@@ -50,4 +50,6 @@ Code for Docker image of FAI [Fully Automatic Installation](http://fai-project.o
 
 NOTES:
 
-* This image is based on Ubuntu 16.04 to create Ubuntu 16.04 images.  With minimal modifications (Dockerfile and fai/NFSROOT) it's possible to create Debian 7 & 8 images, as well as Ubuntu 14.04.
+* This image is based on Ubuntu 16.04 to create Ubuntu 16.04 ISO images.  With minimal modifications (Dockerfile and fai/NFSROOT) it's possible to create Debian 7 & 8 images, as well as Ubuntu 14.04.
+
+* With a bit of tweaking, it should be possible to setup a container as a FAI server over the network.
