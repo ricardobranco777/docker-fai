@@ -25,9 +25,9 @@ Code for Docker image of FAI [Fully Automatic Installation](http://fai-project.o
 
 `checkpkgs.sh /tmp/mirror`
 
-* You may commit a new image fai-mirror or save the mirror with [docker-cp](https://docs.docker.com/engine/reference/commandline/cp/):
+* You may commit a new **_fai-mirror_** image or save the mirror with [docker-cp](https://docs.docker.com/engine/reference/commandline/cp/):
 
-`docker cp fai:/tmp/mirror mirror.hostname`
+`docker cp fai:/tmp/mirror mirror.HOSTNAME
 
 * Edit the **menuentry** at /etc/fai/grub.cfg.  Note: Don't forget to also change the Grub user and password, which defaults to "fai".
 
@@ -37,17 +37,17 @@ Code for Docker image of FAI [Fully Automatic Installation](http://fai-project.o
 
 `fai-cd.sh HOSTNAME`
 
-* The ISO is /tmp/fai-full.iso.  Use [docker-cp](https://docs.docker.com/engine/reference/commandline/cp/):
+* The ISO is /tmp/fai-full.iso.  Use [docker-cp](https://docs.docker.com/engine/reference/commandline/cp/) to get it from the container:
 
 `docker cp fai:/tmp/fai-full.iso .`
 
 * At this point you may **exit** and remove the container.
 
-* To reliably burn the ISO to an USB thumb drive, use the **burniso.sh** script provided in the utils/ directory:
+* To reliably burn the ISO to an USB stick, use the **burniso.sh** script provided in the utils/ directory:
 
 `burniso.sh /tmp/fai-full.iso`
 
 
 NOTES:
 
-* This image is based on Ubuntu 16.04 to create Ubuntu 16.04 images.  I have used this image to create Debian 7 & 8 images, as well as Ubuntu 14.04.
+* This image is based on Ubuntu 16.04 to create Ubuntu 16.04 images.  With minimal modifications (Dockerfile and fai/NFSROOT) it's possible to create Debian 7 & 8 images, as well as Ubuntu 14.04.
