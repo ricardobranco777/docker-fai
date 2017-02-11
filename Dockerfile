@@ -7,7 +7,7 @@ FROM	ubuntu
 ENV	MAIN_REPO	us.archive.ubuntu.com
 
 # Add FAI repository and install GPG key
-ADD	http://fai-project.org/download/074BCDE4.asc /tmp/
+ADD	keys/074BCDE4.asc /tmp/
 RUN	echo "deb http://fai-project.org/download jessie koeln" >> /etc/apt/sources.list && \
 	apt-key add /tmp/074BCDE4.asc && \
 	rm -f /tmp/074BCDE4.asc
