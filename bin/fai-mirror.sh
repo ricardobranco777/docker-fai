@@ -85,7 +85,7 @@ elif [ $distro = "ubuntu" ] ; then
 fi
 
 if echo $classes | grep -qw 'DOCKER' ; then
-	echo "deb $PROXY/apt.dockerproject.org/repo $distro-$codename main" >> /etc/fai/faimirror/apt/sources.list
+	echo "deb [arch=amd64] $PROXY/apt.dockerproject.org/repo $distro-$codename main" >> /etc/fai/faimirror/apt/sources.list
 	fingerprints+=("58118E89F3A912897C070ADBF76221572C52609D")
 fi
 
