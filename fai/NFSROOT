@@ -31,5 +31,5 @@ live-boot
 #git # git consumes a lot of disk space on the FAI CD (ISO 9660)
 
 grub-pc
-linux-image-generic
+linux-generic-hwe-16.04
 
