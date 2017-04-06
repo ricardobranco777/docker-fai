@@ -147,7 +147,6 @@ _check_sha ()
 	echo
 	sha256sum -c $hashes.sha256
 
-	# XXX: Some repositories (notably dl.google.com) still use SHA-1!
 	if [ -s $hashes.sha1 ] ; then
 		echo
 		echo "CHECKPKGS: Checking SHA-1"
