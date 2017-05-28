@@ -1,0 +1,10 @@
+#!/bin/bash
+
+[ ! -f $FAI_ROOT/lib/systemd/system/docker.service ] && exit 0
+
+# Make /etc/default/docker work
+sed -i '/^ExecStart=/s/$/ $DOCKER_OPTS/' $FAI_ROOT/lib/systemd/system/docker.service
+sed -i 's%^ExecStart=.*%EnvironmentFile=/etc/default/docker\n&%' $FAI_ROOT/lib/systemd/system/docker.service
+
+# Start Docker even if we have no network connection
+sed -i 's/^After=network.target/After=local-fs.target/' $FAI_ROOT/lib/systemd/system/docker.service

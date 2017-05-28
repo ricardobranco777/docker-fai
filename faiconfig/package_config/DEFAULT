@@ -1,0 +1,31 @@
+PACKAGES aptitude DHCPC
+isc-dhcp-client
+
+PACKAGES aptitude GRUB_PC
+grub-pc grub-legacy- lilo-
+
+PACKAGES aptitude DEBIAN_7
+linux-image-3.16.0-0.bpo.4-amd64/wheezy-backports
+initramfs-tools/wheezy-backports
+firmware-linux-free
+firmware-linux-nonfree/wheezy-backports
+
+PACKAGES aptitude DEBIAN_8
+linux-image-amd64
+firmware-linux-free
+firmware-linux-nonfree/jessie-backports
+initramfs-tools
+
+PACKAGES aptitude UBUNTU_14
+linux-image-generic-lts-xenial
+initramfs-tools
+amd64-microcode
+intel-microcode
+linux-firmware
+
+PACKAGES aptitude UBUNTU_16
+linux-generic-hwe-16.04
+initramfs-tools
+amd64-microcode
+intel-microcode
+linux-firmware

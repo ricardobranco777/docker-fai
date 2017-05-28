@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Start Docker even if we have no network connection
+if [ -f $FAI_ROOT/etc/init/docker.conf ] ; then
+	sed -i 's/^start on .*/start on local-filesystems/' $FAI_ROOT/etc/init/docker.conf
+fi
+
+# Fix 'cgroup: "memory" requires setting use_hierarchy to 1 on the root'
+if [ -f $FAI_ROOT/etc/init/systemd-logind.conf ] ; then
+	sed -i '/mount -t cgroup/a\\techo 1 > /sys/fs/cgroup/memory/memory.use_hierarchy' $FAI_ROOT/etc/init/systemd-logind.conf
+elif [ -f $FAI_ROOT/etc/init/cgroup-lite.conf ] ; then
+	sed -i '/\/bin\/cgroups-mount/a\\techo 1 > /sys/fs/cgroup/memory/memory.use_hierarchy' $FAI_ROOT/etc/init/cgroup-lite.conf
+fi

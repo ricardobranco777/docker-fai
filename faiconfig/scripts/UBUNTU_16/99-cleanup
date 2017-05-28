@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# No periodic auto update
+for f in 10periodic 99update-notifier ; do
+	rm -f $FAI_ROOT/etc/apt/apt.conf.d/$f
+done
+

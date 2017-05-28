@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# you may want to add i386 arch to amd64 hosts
+if ifclass AMD64; then
+    $ROOTCMD dpkg --add-architecture i386
+fi

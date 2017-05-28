@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# This module is buggy
+fcopy -M /etc/modprobe.d/blacklist-cdc_acm.conf
+
+# Blacklist unused FS modules that consume memory and slow down startup
+fcopy -M /etc/modprobe.d/blacklist-fs.conf
+
+# These scripts slow down startup and may load unneeded kernel modules
+for f in 05efi 10freedos 10qnx 20macosx 20microsoft 30utility 70hurd 80minix 83haiku 90solaris ; do
+	if [ -f $FAI_ROOT/usr/lib/os-probes/mounted/$f ] ; then
+		chmod -x $FAI_ROOT/usr/lib/os-probes/mounted/$f
+	fi
+done

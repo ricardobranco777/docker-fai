@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Check if RAID is used for the boot device
+if [[ $BOOT_DEVICE =~ ^/dev/md ]] ; then
+	raiddev=${BOOT_DEVICE#/dev/}
+	# Adjust the limit if the target devices are SSD
+	for disk in $(LC_ALL=C perl -ne 'if (/^'$raiddev'\s.+raid\d+\s(.+)/) { $_=$1; s/\d+\[\d+\]//g; print }' /proc/mdstat) ; do
+		if [[ $(< /sys/block/$disk/queue/rotational) -gt 0 ]] ; then
+			limit=${limit:-2000}
+		else
+			limit=20000
+		fi
+	done
+else
+	$ROOTCMD apt-get remove -y lvm2 mdadm
+	exit 0
+fi
+
+fcopy -m root,root,0755 /etc/rc.local.d/50-mdadm
+
+# Limit resync speed to avoid performance issues
+echo dev.raid.speed_limit_max=$limit >> $FAI_ROOT/etc/sysctl.conf
+
+# Disable lvmetad
+sed -ri 's/(use_lvmetad )= 1/\1= 0/' $FAI_ROOT/etc/lvm/lvm.conf
+
+# Disable lvmpolld
+sed -ri 's/(use_lvmpolld )= 1/\1= 0/' $FAI_ROOT/etc/lvm/lvm.conf

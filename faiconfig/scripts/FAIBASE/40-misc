@@ -1,0 +1,31 @@
+#! /bin/bash
+
+# (c) Thomas Lange, 2001-2015, lange@debian.org
+# (c) Michael Goetze, 2010-2011, mgoetze@mgoetze.net
+
+error=0; trap 'error=$(($?>$error?$?:$error))' ERR # save maximum error code
+
+# a list of modules which are loaded at boot time
+for module in $MODULESLIST; do
+    ainsl -a /etc/modules "^$module$"
+done
+
+fcopy -Mv /etc/hostname || echo $HOSTNAME > $target/etc/hostname
+ainsl -av /etc/mailname ${HOSTNAME}
+if [ ! -e $target/etc/adjtime ]; then
+    printf "0.0 0 0.0\n0\nUTC\n" > $target/etc/adjtime
+fi
+if [ "$UTC" = "yes" ]; then
+    sed -i -e 's:^LOCAL$:UTC:' $target/etc/adjtime
+else
+    sed -i -e 's:^UTC$:LOCAL:' $target/etc/adjtime
+fi
+
+rm -f $target/etc/dpkg/dpkg.cfg.d/unsafe-io
+
+#[ $FAI_ACTION = "install" ] && cp /etc/fai/fai.conf $target/etc/fai/fai.conf
+#ainsl -av /etc/fai/fai.conf "FAI_CONFIG_SRC=$FAI_CONFIG_SRC"
+
+#fcopy -Miv /etc/fai/fai.conf
+
+exit $error

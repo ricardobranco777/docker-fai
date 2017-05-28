@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+# hooks/partition.WIPEDISKS
+#
+# author : W. Walkowiak, 2013-01-03
+# changed: Ricardo Branco
+#
+# Stop LVM an MD RAIDs if existing and wipe all disks with wipefs and dd
+#
+# $Id: $
+#===========================================================================
+
+# stop volume groups
+echo "Stopping VGs:"
+vgs 
+vgchange -an $vg
+
+# stop MD RAID arrays
+echo "Stopping and removing MD RAID arrays:"
+mdadm --detail --scan 
+for array in $(mdadm --detail --scan | cut -d ' ' -f 2)
+do
+  array=$(readlink -f $array)
+  parts=$(mdadm --detail  $array | grep '/dev/' | grep -oE "[^ :]+$")
+  mdadm --stop $array
+  [ -x $array ] && mdadm --remove $array
+  for part in $parts; do
+    echo "zeroing $part"
+    mdadm --zero-superblock $part
+  done 
+done
+rm -f /etc/mdadm/mdadm.conf
+
+# wipe all disks with wipefs and dd
+if [ -n "$disklist" ]; then
+  for disk in $disklist; do
+    # Skip USB devices
+    [[ $(udevadm info -q property -n $disk | sed -rne 's/^ID_BUS=//p') == "ata" ]] || continue
+    echo "Wiping boot sector of disk: $disk"
+    wipefs -a /dev/$disk
+    dd if=/dev/zero of=/dev/$disk bs=512 count=64 2>/dev/null
+    # Remove GPT signature at end of disk, too
+    dd if=/dev/zero of=/dev/$disk bs=512 count=64 seek=$(($(blockdev --getsz /dev/$disk) - 64)) 2>/dev/null
+    for part in $(ls /dev/$disk[0-9]* 2>/dev/null) ; do
+      dd if=/dev/zero of=$part bs=64K count=1 2>/dev/null
+    done
+  done
+fi
+

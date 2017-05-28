@@ -1,0 +1,18 @@
+
+disk_config disk1
+primary - 256M	- -
+primary - 16G	- -
+primary - 0-	- -
+
+disk_config disk2
+primary - 256M	- -
+primary - 16G	- -
+primary - 0-	- -
+
+disk_config raid fstabkey:uuid 
+raid1	/boot	disk1.1,disk2.1	ext2	rw,relatime
+raid1	-	disk1.2,disk2.2	-	-
+raid1	/	disk1.3,disk2.3	ext4	rw,relatime,errors=remount-ro createopts="-L ROOT" tuneopts="-c 0 -i 0"
+
+disk_config cryptsetup
+swap	swap	md1	swap	sw

@@ -1,0 +1,109 @@
+#
+# Functions to manage iptables for Docker containers:
+# add_rules $container
+# del_rules $container
+#
+
+DOCKER=${DOCKER:-/usr/bin/docker}
+
+IPT=$(type -P iptables)
+
+#
+# If either --iptables=false or --userland-proxy=false is set, manage iptables ourselves
+#
+if egrep -qw -- '--(iptables|userland-proxy)=false' /proc/$(< /var/run/docker.pid)/cmdline ; then
+
+# List port mappings for the container
+_get_ports ()
+{
+	$DOCKER port "$1" 2>/dev/null | sed -r 's@(^[0-9]+)/(tcp|udp) -> ([0-9\.]+):([0-9]+)$@\1 \2 \3 \4@'
+}
+
+# List port mappings for the linked hosts for the container
+_get_ports2 ()
+{
+	local links linkIP
+
+	links=$($DOCKER inspect --type container -f '{{ .HostConfig.Links }}' "$1" 2>/dev/null | \
+		sed -re 's/^\[//' -e 's/]$//' -e 's%/%%g' -e 's/:[^ ]*//g' -e 's/ /\n/g' | sort -u)
+
+	[ -z "$links" ] && return
+
+	for link in $links ; do
+		linkIP=$($DOCKER inspect --type container -f '{{ .NetworkSettings.IPAddress }}' "$link" 2>/dev/null)
+		# Get exposed ports by container
+		ports=$($DOCKER inspect --type container -f '{{ .Config.ExposedPorts }}' "$link" 2>/dev/null | \
+				sed -re 's/^map\[//' -e 's/]$//' -e 's/:\{}//g')
+		for port in $ports ; do
+			echo "${port#*/} ${port%/*} $linkIP"
+		done
+	done
+}
+
+# Add iptables rules for container
+add_rules ()
+{
+	local containerIP
+
+	set +e
+
+	[ -z "$IPT" ] && return
+
+	containerIP=$($DOCKER inspect --type container -f '{{ .NetworkSettings.IPAddress }}' "$1" 2>/dev/null)
+
+	_get_ports "$1" | \
+	while read containerPort proto destination port ; do
+		# Protect against adding this same rule twice.
+		$IPT -D DOCKER-SAES -p $proto --dport $port ! -i docker0 -o docker0 -d $containerIP -j ACCEPT 2>/dev/null
+		$IPT -A DOCKER-SAES -p $proto --dport $port ! -i docker0 -o docker0 -d $containerIP -j ACCEPT
+		# Protect against adding this same rule twice.
+		$IPT -t nat -D DOCKER-SAES -p $proto --dport $port -j DNAT --to-destination $containerIP:$containerPort 2>/dev/null
+		$IPT -t nat -A DOCKER-SAES -p $proto --dport $port -j DNAT --to-destination $containerIP:$containerPort
+	done
+
+	# Implement --icc=true by docker-daemon(8)
+	_get_ports2 "$1" | \
+	while read proto port link ; do
+		# Protect against adding these same rules twice.
+		$IPT -D DOCKER-SAES -p $proto --dport $port -i docker0 -o docker0 -s $containerIP -d $link -j ACCEPT 2>/dev/null
+		$IPT -D DOCKER-SAES -p $proto --sport $port -i docker0 -o docker0 -d $containerIP -s $link -j ACCEPT 2>/dev/null
+		$IPT -A DOCKER-SAES -p $proto --dport $port -i docker0 -o docker0 -s $containerIP -d $link -j ACCEPT 2>/dev/null
+		$IPT -A DOCKER-SAES -p $proto --sport $port -i docker0 -o docker0 -d $containerIP -s $link -j ACCEPT 2>/dev/null
+	done
+
+	set -e
+}
+
+# Delete iptables rules for container
+del_rules ()
+{
+	local containerIP
+
+	set +e
+
+	[ -z "$IPT" ] && return
+
+	containerIP=$($DOCKER inspect --type container -f '{{ .NetworkSettings.IPAddress }}' "$1" 2>/dev/null)
+
+	_get_ports "$1" | \
+	while read containerPort proto destination port ; do
+		$IPT -D DOCKER-SAES -p $proto --dport $port ! -i docker0 -o docker0 -d $containerIP -j ACCEPT 2>/dev/null
+		$IPT -t nat -D DOCKER-SAES -p $proto --dport $port -j DNAT --to-destination $containerIP:$containerPort
+	done
+
+	_get_ports2 "$1" | \
+	while read proto port link ; do
+		$IPT -D DOCKER-SAES -p $proto --dport $port -i docker0 -o docker0 -s $containerIP -d $link -j ACCEPT
+		$IPT -D DOCKER-SAES -p $proto --sport $port -i docker0 -o docker0 -d $containerIP -s $link -j ACCEPT
+	done
+
+	set -e
+}
+
+else
+
+add_rules () { :; }
+del_rules () { :; }
+
+fi
+

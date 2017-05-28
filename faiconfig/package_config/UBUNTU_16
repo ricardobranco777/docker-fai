@@ -1,0 +1,6 @@
+PACKAGES aptitude
+dbus
+libpam-mount
+libpam-systemd
+pm-utils
+ubuntu-minimal

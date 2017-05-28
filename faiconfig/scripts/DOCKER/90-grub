@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Enable Swap/Memory accounting / Enable Apparmor
+sed -ri 's/^(GRUB_CMDLINE_LINUX=.*)"$/\1 cgroup_enable=memory swapaccount=1 apparmor=1 security=apparmor"/' $FAI_ROOT/etc/default/grub

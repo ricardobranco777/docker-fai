@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Create /etc/apt/sources.list from the contents of /media/mirror
+find /media/mirror -name Packages -type f | \
+sed -re 's%^%file:%' -e 's%/dists/% %' -e 's%/binary-[a-z0-9]*%%' -e 's%/Packages$%%' -e 's% (.*)/(.*)% \1 \2%' -e 's/^/deb /' | \
+awk '{ print $0, $3 ? "" : "/" }' | sort -u > $FAI_ROOT/etc/apt/sources.list
+

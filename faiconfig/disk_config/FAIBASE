@@ -1,0 +1,9 @@
+
+disk_config disk1 disklabel:msdos bootable:1 fstabkey:uuid
+
+primary	/boot	256M	ext2	rw
+primary	-	16G	-	-
+primary	/	0-	ext4	rw,relatime,errors=remount-ro createopts="-L ROOT -m 5" tuneopts="-c 0 -i 0"
+
+disk_config cryptsetup
+swap	swap	disk1.2	swap	sw

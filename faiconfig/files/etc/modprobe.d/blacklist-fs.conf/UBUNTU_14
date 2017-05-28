@@ -1,0 +1,6 @@
+blacklist btrfs
+blacklist jfs
+blacklist minix
+blacklist qnx4
+blacklist ufs
+blacklist xfs

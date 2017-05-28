@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir -p $FAI_ROOT/etc/apt/sources.list.d
+

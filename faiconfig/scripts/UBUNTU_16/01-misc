@@ -1,0 +1,6 @@
+#! /bin/bash
+
+# XXX Fix bug in Ubuntu
+$ROOTCMD locale-gen en_US.UTF-8
+$ROOTCMD dpkg-reconfigure locales
+

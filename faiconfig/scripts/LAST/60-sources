@@ -1,0 +1,52 @@
+#!/bin/bash
+
+if ifclass DEBIAN_7 ; then
+	distro="debian"
+	codename="wheezy"
+elif ifclass DEBIAN_8 ; then
+	distro="debian"
+	codename="jessie"
+elif ifclass UBUNTU_14 ; then
+	distro="ubuntu"
+	codename="trusty"
+elif ifclass UBUNTU_16 ; then
+	distro="ubuntu"
+	codename="xenial"
+fi
+
+if ifclass -o DEBIAN_7 DEBIAN_8 ; then
+	cat > $FAI_ROOT/etc/apt/sources.list <<- EOF
+		deb http://ftp.debian.org/debian/ $codename main contrib non-free
+		deb http://ftp.debian.org/debian/ $codename-updates main contrib non-free
+		deb http://ftp.debian.org/debian/ $codename-backports main contrib non-free
+		deb http://security.debian.org/ $codename/updates main contrib non-free
+	EOF
+elif ifclass -o UBUNTU_14 UBUNTU_16 ; then
+	cat > $FAI_ROOT/etc/apt/sources.list <<- EOF
+		deb http://archive.ubuntu.com/ubuntu $codename main restricted universe multiverse
+		deb http://archive.ubuntu.com/ubuntu $codename-updates main restricted universe multiverse
+		deb http://security.ubuntu.com/ubuntu $codename-security main restricted universe multiverse
+		deb http://archive.ubuntu.com/ubuntu $codename-backports main restricted universe multiverse
+		deb http://archive.canonical.com/ubuntu $codename partner
+	EOF
+fi
+
+ifclass SMTT_BASE && \
+echo "deb https://reposmtt.smartmatic.net:8443/debian /" > $FAI_ROOT/etc/apt/sources.list.d/reposmtt.list
+
+ifclass DOCKER && \
+echo "deb [arch=amd64] https://apt.dockerproject.org/repo $distro-$codename main" > $FAI_ROOT/etc/apt/sources.list.d/docker.list
+
+ifclass CHROME && \
+echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > $FAI_ROOT/etc/apt/sources.list.d/google-chrome.list
+
+if ifclass MONGODB ; then
+	if [ $distro = "debian" ] ; then
+		mongo_dist="main"
+	elif [ $distro = "ubuntu" ] ; then
+		mongo_dist="universe"
+	fi
+	echo "deb http://repo.mongodb.org/apt/$distro $codename/mongodb-org/3.2 $mongo_dist" > $FAI_ROOT/etc/apt/sources.list.d/mongodb-org.list
+fi
+
+exit 0

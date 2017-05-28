@@ -1,0 +1,8 @@
+#! /bin/bash
+
+if [ ! -L $target/etc/resolv.conf -a -e /etc/resolv.conf ]; then
+	cp -p /etc/resolv.conf $target/etc
+fi
+
+#fcopy -i /etc/resolv.conf
+fcopy -iM /etc/network/interfaces

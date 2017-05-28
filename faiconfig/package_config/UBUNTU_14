@@ -1,0 +1,4 @@
+PACKAGES aptitude
+libpam-mount
+pm-utils
+ubuntu-minimal

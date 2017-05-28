@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Make sure /etc/resolv.conf is a symlink to /run/resolvconf/resolv.conf
+
+if [ ! -L $FAI_ROOT/etc/resolv.conf ]; then
+    rm -f $FAI_ROOT/etc/resolv.conf
+    ln -s /run/resolvconf/resolv.conf $FAI_ROOT/etc/resolv.conf
+fi
+
+echo > $FAI_ROOT/etc/resolvconf/resolv.conf.d/original
+

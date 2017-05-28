@@ -1,0 +1,21 @@
+PACKAGES aptitude
+docker-engine
+
+PACKAGES aptitude UBUNTU_14
+cgroup-lite
+
+PACKAGES aptitude UBUNTU_16
+cgroup-lite
+
+PACKAGES aptitude DEBIAN_7
+cgroupfs-mount
+
+PACKAGES aptitude DEBIAN_8
+cgroupfs-mount
+
+PACKAGES aptitude GNOME
+zenity
+
+PACKAGES aptitude
+aufs-tools
+ca-certificates

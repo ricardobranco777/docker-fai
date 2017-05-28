@@ -1,0 +1,3 @@
+#! /bin/bash
+
+fcopy -M /etc/apt/apt.conf.d/80update
