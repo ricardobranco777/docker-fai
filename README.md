@@ -21,6 +21,8 @@ Code for Docker image of FAI [Fully Automatic Installation](http://fai-project.o
 
 `fai-mirror.sh HOSTNAME`
 
+NOTE: The HOSTNAME argument must be already defined in faiconfig/class/50-host-classes.
+
 * Validate the mirror with the **checkpkgs.sh** script to check its integrity:
 
 `checkpkgs.sh /tmp/mirror`
