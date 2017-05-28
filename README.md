@@ -29,9 +29,11 @@ Code for Docker image of FAI [Fully Automatic Installation](http://fai-project.o
 
 `docker cp fai:/tmp/mirror mirror.HOSTNAME
 
-* Edit the **menuentry** at /etc/fai/grub.cfg.  Note: Don't forget to also change the Grub user and password, which defaults to "fai".
+* Edit the **menuentry** at /etc/fai/grub.cfg.  Change the XXX host with the name of the host used on faiconfig/class/50-hosts-classes.  
 
 `vi /etc/fai/grub.cfg`
+
+NOTE: Don't forget to also change the Grub user and password, which defaults to "fai".
 
 * Inside the container, run the **fai-cd.sh** script to generate a FAI ISO:
 
