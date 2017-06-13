@@ -67,8 +67,8 @@ download_pubkeys ()
 	echo
 
 	# Add Docker fingerprint
-	[ -d "$MIRROR/apt.dockerproject.org/" ] && \
-		fingerprints+=("58118E89F3A912897C070ADBF76221572C52609D")
+	[ -d "$MIRROR/download.docker.com/" ] && \
+		fingerprints+=("9DC858229FC7DD38854AE2D88D81803C0EBFCD88")
 
 	# Add Google fingerprints
 	if [ -d "$MIRROR/dl.google.com/linux/chrome" ] ; then

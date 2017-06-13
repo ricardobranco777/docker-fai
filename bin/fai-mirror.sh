@@ -85,8 +85,8 @@ elif [ $distro = "ubuntu" ] ; then
 fi
 
 if echo $classes | grep -qw 'DOCKER' ; then
-	echo "deb [arch=amd64] $PROXY/apt.dockerproject.org/repo $distro-$codename main" >> /etc/fai/faimirror/apt/sources.list
-	fingerprints+=("58118E89F3A912897C070ADBF76221572C52609D")
+	echo "deb [arch=amd64] https://download.docker.com/linux/$distro $codename edge" >> /etc/fai/faimirror/apt/sources.list
+	fingerprints+=("9DC858229FC7DD38854AE2D88D81803C0EBFCD88")
 fi
 
 if echo $classes | grep -qw 'JAVA_[678]' ; then
@@ -166,7 +166,7 @@ if [ -d uburep ] ; then
 fi
 
 # Copy the FAI, Docker, Google and PPA directories
-for d in fai-project.org apt.dockerproject.org ppa.launchpad.net dl.google.com repo.mongodb.org ; do
+for d in fai-project.org download.docker.com ppa.launchpad.net dl.google.com repo.mongodb.org ; do
 	[ ! -d $CACHE/$d ] && continue
 	cp -r $CACHE/$d $MIRROR
 done

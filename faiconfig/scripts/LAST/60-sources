@@ -35,7 +35,7 @@ ifclass SMTT_BASE && \
 echo "deb https://reposmtt.smartmatic.net:8443/debian /" > $FAI_ROOT/etc/apt/sources.list.d/reposmtt.list
 
 ifclass DOCKER && \
-echo "deb [arch=amd64] https://apt.dockerproject.org/repo $distro-$codename main" > $FAI_ROOT/etc/apt/sources.list.d/docker.list
+echo "deb [arch=amd64] https://download.docker.com/linux/$distro $codename edge" > $FAI_ROOT/etc/apt/sources.list.d/docker.list
 
 ifclass CHROME && \
 echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > $FAI_ROOT/etc/apt/sources.list.d/google-chrome.list
