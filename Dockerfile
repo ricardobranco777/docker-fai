@@ -34,6 +34,7 @@ RUN	sed -ri -e 's/^deb-src/#&/' -e 's/universe$/& multiverse/' -e '/[a-z]+-secur
 		openssh-client \
 		patch \
 		reprepro \
+		tzdata \
 		vim \
 		wget \
 		xorriso \
