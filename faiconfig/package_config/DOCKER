@@ -1,5 +1,5 @@
 PACKAGES aptitude
-docker-engine
+docker-ce
 
 PACKAGES aptitude UBUNTU_14
 cgroup-lite
