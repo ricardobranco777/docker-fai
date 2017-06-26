@@ -13,7 +13,7 @@ RUN	echo "deb http://fai-project.org/download jessie koeln" >> /etc/apt/sources.
 	rm -f /tmp/074BCDE4.asc
 
 # Install packages
-RUN	sed -ri -e 's/^deb-src/#&/' -e 's/universe$/& multiverse/' -e '/[a-z]+-security/s/archive.ubuntu.com/security.ubuntu.com/' /etc/apt/sources.list && \
+RUN	sed -ri -e 's/^deb-src/#&/' -e '/[a-z]+-security/s/archive.ubuntu.com/security.ubuntu.com/' /etc/apt/sources.list && \
 	sed -i "s/archive\.ubuntu\.com/${MAIN_REPO}/" /etc/apt/sources.list && \
 	apt-get update && \
 	apt-get upgrade -y && \
